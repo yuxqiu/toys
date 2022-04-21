@@ -3,6 +3,96 @@
 #include <iostream>
 #include <queue>
 
+std::unique_ptr<Trie::Node> Huffman::_readTrie(const Reader &reader)
+{
+    if (reader.readBit())
+    {
+        if (reader.isEOF())
+        {
+            throw std::runtime_error("Invalid File Format");
+        }
+
+        std::unique_ptr<Trie::Node> temp = std::make_unique<Trie::Node>();
+
+        temp->c = reader.readChar();
+        if (reader.isEOF())
+        {
+            throw std::runtime_error("Invalid File Format");
+        }
+
+        return temp;
+    }
+
+    std::unique_ptr<Trie::Node> left = _readTrie(reader);
+    std::unique_ptr<Trie::Node> right = _readTrie(reader);
+
+    std::unique_ptr<Trie::Node> root = std::make_unique<Trie::Node>();
+    root->left = std::move(left);
+    root->right = std::move(right);
+    return root;
+}
+
+Trie Huffman::readTrie(const Reader &reader)
+{
+    Trie t(_readTrie(reader));
+    if (t.root->isLeaf())
+    {
+        throw std::runtime_error("Invalid File Format");
+    }
+    return t;
+}
+
+void Huffman::_writeTrie(const std::unique_ptr<Trie::Node> &ptr, const Writer &writer){
+    if (ptr->isLeaf())
+    {
+        writer.writeBit(true);
+        writer.write(ptr->c);
+        return;
+    }
+
+    writer.writeBit(false);
+
+    _writeTrie(ptr->left, writer);
+    _writeTrie(ptr->right, writer);
+}
+
+void Huffman::saveToFile(const Data & data, const std::string& outfile){
+    Writer writer(outfile);
+    _writeTrie(data.t.root, writer);
+
+    const std::vector<bool>& v = data.data;
+    uint8_t modulus = (writer.getCount() + v.size()) % 8;
+    if(modulus != 0){
+        modulus = 8 - modulus;
+    }
+    writer.write(modulus);
+
+    for (const auto &b : v)
+    {
+        writer.writeBit(b);
+    }
+}
+
+Data Huffman::loadFromFile(const std::string &infile){
+    Reader reader(infile);
+    Trie t = readTrie(reader);
+    uint8_t modulus = reader.readChar();
+
+    std::vector<bool> v;
+    v.reserve(VEC_SIZE);
+
+    bool b = reader.readBit();
+    while(!reader.isEOF()){
+        v.push_back(b);
+        b = reader.readBit();
+    }
+    for(uint8_t i = 0; i < modulus; ++i){
+        v.pop_back();
+    }
+
+    return {std::move(t), std::move(v)};
+}
+
 void Huffman::compress(const std::string &infile, const std::string &outfile)
 {
     size_t count[CHAR_SIZE] = {};
@@ -22,24 +112,22 @@ void Huffman::compress(const std::string &infile, const std::string &outfile)
     std::shared_ptr<Trie> t = buildTrie(count);
     LookupTable table(*t);
 
-    // 3. Compress Data
+    // 3. Compress
     Reader reader(infile);
-    Writer writer(outfile);
+    Data data = {std::move(*t), std::vector<bool>()};
+    data.data.reserve(VEC_SIZE);
 
-    // 3.1 Output Trie
-    Trie::writeTrie(*t, writer);
-
-    // 3.2 Output compressed uint8_t
+    // 3.1 Load into memory
     uint8_t c = reader.readChar();
     while (!reader.isEOF())
     {
-        const std::vector<bool> bits = table.lookup(c);
-        for (const auto &b : bits)
-        {
-            writer.writeBit(b);
-        }
+        const std::vector<bool>& bits = table.lookup(c);
+        std::copy(bits.cbegin(), bits.cend(), std::back_inserter(data.data));
         c = reader.readChar();
     }
+
+    // 3.2 Save to file
+    saveToFile(data, outfile);
 }
 
 std::shared_ptr<Trie> Huffman::buildTrie(size_t count[CHAR_SIZE])
@@ -105,29 +193,19 @@ void Huffman::updateNodePointer(Trie::Node const *&ptr, bool b)
 
 void Huffman::decompress(const std::string &infile, const std::string &outfile)
 {
-    Reader reader(infile);
-    Trie t = Trie::readTrie(reader);
+    Data data = loadFromFile(infile);
 
     // 2. Decompress Data
     Writer writer(outfile);
-    const Trie::Node *ptr = t.root.get();
+    const Trie::Node *ptr = data.t.root.get();
 
-    bool b = reader.readBit();
-    while (!reader.isEOF())
+    for (size_t i = 0; i < data.data.size(); ++i)
     {
-        while (!ptr->isLeaf() && !reader.isEOF())
+        updateNodePointer(ptr, data.data[i]);
+        if (ptr->isLeaf())
         {
-            updateNodePointer(ptr, b);
-            b = reader.readBit();
+            writer.write(ptr->c);
+            ptr = data.t.root.get();
         }
-
-        // discard the padding bits
-        if (!ptr->isLeaf())
-        {
-            break;
-        }
-
-        writer.write(ptr->c);
-        ptr = t.root.get();
     }
 }

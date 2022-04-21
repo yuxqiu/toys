@@ -18,6 +18,7 @@ public:
 
     void writeBit(bool bit) const;
     void write(uint8_t c) const;
+    uint8_t getCount() const;
 };
 
 class Reader

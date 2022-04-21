@@ -11,8 +11,11 @@ Writer::Writer(const std::string &filename) : buffer(0), count(0)
 
 Writer::~Writer()
 {
-    count = 8;
-    writeBit(false);
+    if (count != 0)
+    {
+        count = 8;
+        writeBit(false);
+    }
     fclose(file);
 }
 
@@ -41,6 +44,10 @@ void Writer::write(uint8_t c) const
     {
         writeBit((c >> (7 - i)) & 1);
     }
+}
+
+uint8_t Writer::getCount() const{
+    return count;
 }
 
 Reader::Reader(const std::string &filename) : buffer(0), count(8)

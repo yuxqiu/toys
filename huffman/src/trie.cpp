@@ -33,68 +33,6 @@ void Trie::merge(Trie &&other)
     frequency += other.frequency;
 }
 
-void Trie::_writeTrie(const std::unique_ptr<Node> &ptr, const Writer &writer)
-{
-    if (ptr->isLeaf())
-    {
-        writer.writeBit(true);
-        writer.write(ptr->c);
-        return;
-    }
-
-    writer.writeBit(false);
-
-    _writeTrie(ptr->left, writer);
-    _writeTrie(ptr->right, writer);
-}
-
-void Trie::writeTrie(const Trie &t, const Writer &writer)
-{
-    _writeTrie(t.root, writer);
-}
-
-std::unique_ptr<Trie::Node> Trie::_readTrie(const Reader &reader)
-{
-    if (reader.readBit())
-    {
-        if (reader.isEOF())
-        {
-            throw std::runtime_error("Invalid File Format");
-        }
-
-        std::unique_ptr<Node> temp = std::make_unique<Node>();
-
-        temp->c = reader.readChar();
-        if (reader.isEOF())
-        {
-            throw std::runtime_error("Invalid File Format");
-        }
-
-        return temp;
-    }
-
-    std::unique_ptr<Node> left = _readTrie(reader);
-    std::unique_ptr<Node> right = _readTrie(reader);
-
-    std::unique_ptr<Node> root = std::make_unique<Node>();
-    root->left = std::move(left);
-    root->right = std::move(right);
-    return root;
-}
-
-Trie Trie::readTrie(const Reader &reader)
-{
-    Trie t(_readTrie(reader));
-
-    // root can never be leaf
-    if (t.root->isLeaf())
-    {
-        throw std::runtime_error("Invalid File Format");
-    }
-
-    return t;
-}
-
 bool operator<(const Trie &lhs, const Trie &rhs)
 {
     return lhs.frequency < rhs.frequency;

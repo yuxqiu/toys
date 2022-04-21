@@ -1,6 +1,5 @@
 #pragma once
 
-#include "util.h"
 #include <cstddef>
 #include <map>
 #include <memory>
@@ -23,10 +22,6 @@ private:
     std::unique_ptr<Node> root;
     size_t frequency;
 
-private:
-    static std::unique_ptr<Node> _readTrie(const Reader &other);
-    static void _writeTrie(const std::unique_ptr<Node> &ptr, const Writer &writer);
-
 public:
     Trie(uint8_t c, size_t frequency);
     Trie(std::unique_ptr<Node> &&root);
@@ -36,9 +31,6 @@ public:
     Trie &operator=(Trie &&other);
 
     void merge(Trie &&other);
-
-    static Trie readTrie(const Reader &reader);
-    static void writeTrie(const Trie &t, const Writer &writer);
 
     friend bool operator<(const Trie &lhs, const Trie &rhs);
     friend class LookupTable;
