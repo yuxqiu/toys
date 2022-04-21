@@ -1,8 +1,10 @@
 #include "huffman.h"
 #include <iostream>
 
-int main(int argc, char** argv){
-    if(argc != 3){
+int main(int argc, char **argv)
+{
+    if (argc != 3)
+    {
         std::cerr << "Usage: ./main [input] [output]\n";
         return 1;
     }

@@ -28,7 +28,8 @@ void Writer::writeBit(bool bit) const
         buffer = 0;
     }
 
-    if(bit){
+    if (bit)
+    {
         buffer |= (1 << (7 - count));
     }
     ++count;
@@ -36,7 +37,8 @@ void Writer::writeBit(bool bit) const
 
 void Writer::write(uint8_t c) const
 {
-    for(uint8_t i = 0; i < 8; ++i){
+    for (uint8_t i = 0; i < 8; ++i)
+    {
         writeBit((c >> (7 - i)) & 1);
     }
 }
@@ -62,7 +64,8 @@ bool Reader::isEOF() const
 
 bool Reader::readBit() const
 {
-    if(count == 8){
+    if (count == 8)
+    {
         if (fread(&buffer, sizeof(uint8_t), 1, file) != 1 && ferror(file))
         {
             throw std::runtime_error("Failed to read from the file");
@@ -77,8 +80,10 @@ bool Reader::readBit() const
 uint8_t Reader::readChar() const
 {
     uint8_t c = 0;
-    for(uint8_t i = 0; i < 8; ++i){
-        if(readBit()){
+    for (uint8_t i = 0; i < 8; ++i)
+    {
+        if (readBit())
+        {
             c |= (1 << (7 - i));
         }
     }

@@ -1,7 +1,7 @@
 #include "huffman.h"
 #include "util.h"
-#include <queue>
 #include <iostream>
+#include <queue>
 
 void Huffman::compress(const std::string &infile, const std::string &outfile)
 {
@@ -122,7 +122,8 @@ void Huffman::decompress(const std::string &infile, const std::string &outfile)
         }
 
         // discard the padding bits
-        if(!ptr->isLeaf()){
+        if (!ptr->isLeaf())
+        {
             break;
         }
 
