@@ -2,8 +2,7 @@
 
 Trie::Trie(uint8_t c, size_t frequency) : frequency(frequency)
 {
-    root = std::make_unique<Node>();
-    root->c = c;
+    root = std::make_unique<Node>(c);
 }
 
 Trie::Trie(std::unique_ptr<Node> &&root) : root(std::move(root)), frequency(0)
@@ -26,9 +25,7 @@ Trie &Trie::operator=(Trie &&other)
 
 void Trie::merge(Trie &&other)
 {
-    std::unique_ptr<Node> temp = std::make_unique<Node>();
-    temp->left = std::move(root);
-    temp->right = std::move(other.root);
+    std::unique_ptr<Node> temp = std::make_unique<Node>(0, std::move(root), std::move(other.root));
     root = std::move(temp);
     frequency += other.frequency;
 }

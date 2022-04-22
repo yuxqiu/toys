@@ -16,6 +16,11 @@ private:
         std::unique_ptr<Node> left, right;
         uint8_t c;
 
+        Node(uint8_t c, std::unique_ptr<Node> &&left, std::unique_ptr<Node> &&right)
+            : left(std::move(left)), right(std::move(right)), c(c) {}
+
+        Node(uint8_t c) : c(c) {}
+
         bool isLeaf() const
         {
             return !(left) && !(right);

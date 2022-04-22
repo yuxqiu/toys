@@ -3,33 +3,27 @@
 #include <iostream>
 #include <queue>
 
+#define check_read_error(s)          \
+    if (reader.isEOF())              \
+    {                                \
+        throw std::runtime_error(s); \
+    }
+
 std::unique_ptr<Trie::Node> Huffman::_readTrie(const Reader &reader)
 {
-    if (reader.readBit())
+    bool b = reader.readBit();
+    check_read_error("Invalid File Format");
+
+    if (b)
     {
-        if (reader.isEOF())
-        {
-            throw std::runtime_error("Invalid File Format");
-        }
-
-        std::unique_ptr<Trie::Node> temp = std::make_unique<Trie::Node>();
-
-        temp->c = reader.readChar();
-        if (reader.isEOF())
-        {
-            throw std::runtime_error("Invalid File Format");
-        }
-
-        return temp;
+        uint8_t c = reader.readChar();
+        check_read_error("Invalid File Format");
+        return std::make_unique<Trie::Node>(c);
     }
 
     std::unique_ptr<Trie::Node> left = _readTrie(reader);
     std::unique_ptr<Trie::Node> right = _readTrie(reader);
-
-    std::unique_ptr<Trie::Node> root = std::make_unique<Trie::Node>();
-    root->left = std::move(left);
-    root->right = std::move(right);
-    return root;
+    return std::make_unique<Trie::Node>(0, std::move(left), std::move(right));
 }
 
 Trie Huffman::readTrie(const Reader &reader)
@@ -167,11 +161,8 @@ std::shared_ptr<Trie> Huffman::buildTrie(size_t count[CHAR_SIZE])
     std::shared_ptr<Trie> t = pq.top();
     if (t->root->isLeaf())
     {
-        std::unique_ptr<Trie::Node> root = std::make_unique<Trie::Node>();
-        root->left = std::move(t->root);
-        root->right = std::make_unique<Trie::Node>();
-        root->right->c = ((unsigned int)(root->left->c) + 1) & 0xff;
-        t->root = std::move(root);
+        std::unique_ptr<Trie::Node> temp = std::make_unique<Trie::Node>(((u_int)(t->root->c) + 1) & 0xff);
+        t->root = std::make_unique<Trie::Node>(0, std::move(t->root), std::move(temp));
     }
 
     return t;
@@ -201,7 +192,6 @@ void Huffman::decompress(const std::string &infile, const std::string &outfile)
 {
     Data data = loadFromFile(infile);
 
-    // 2. Decompress Data
     Writer writer(outfile);
     const Trie::Node *ptr = data.t.root.get();
 
