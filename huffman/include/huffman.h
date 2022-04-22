@@ -1,12 +1,14 @@
 #pragma once
 
+#include <string>
+
 #include "trie.h"
 #include "util.h"
-#include <string>
 
 constexpr size_t CHAR_SIZE = 256;
 constexpr size_t VEC_SIZE = 1024;
 
+// struct that can be saved to and loaded from file
 struct Data
 {
     Trie t;
@@ -24,15 +26,18 @@ private:
 
     // helper function to read a Trie::Node pointer from file
     static std::unique_ptr<Trie::Node> _readTrie(const Reader &reader);
-    static void _writeTrie(const std::unique_ptr<Trie::Node> &ptr, const Writer &writer);
+
+    // write a Trie to the file
+    static void writeTrie(const std::unique_ptr<Trie::Node> &ptr,
+                          const Writer &writer);
 
     // use _readTrie helper to read a Trie::Node pointer and wrap it into a trie
     static Trie readTrie(const Reader &reader);
 
-    // save a Data to file
-    static void saveToFile(const Data & data, const std::string& outfile);
+    // save a Data to file via Writer
+    static void saveToFile(const Data &data, const std::string &outfile);
 
-    // load a Data from file
+    // load a Data from file via Reader
     static Data loadFromFile(const std::string &infile);
 
 public:

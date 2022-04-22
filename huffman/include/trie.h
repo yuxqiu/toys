@@ -5,6 +5,9 @@
 #include <memory>
 #include <vector>
 
+/**
+ * @brief A trie data structure
+ */
 class Trie
 {
 private:
@@ -30,6 +33,7 @@ public:
     Trie(Trie &&other);
     Trie &operator=(Trie &&other);
 
+    // merge two tries into one by connecting two tries with a new root node
     void merge(Trie &&other);
 
     friend bool operator<(const Trie &lhs, const Trie &rhs);
@@ -39,6 +43,9 @@ public:
 
 bool operator<(const Trie &lhs, const Trie &rhs);
 
+/**
+ * @brief A class that builds a lookup table to associate a char with its Huffman Encoding
+ */
 class LookupTable
 {
 private:
@@ -50,5 +57,6 @@ private:
 public:
     LookupTable(const Trie &t);
 
+    // look up the corresponding Huffman Encoding of a char
     const std::vector<bool> &lookup(uint8_t c) const;
 };

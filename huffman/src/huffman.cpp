@@ -42,7 +42,8 @@ Trie Huffman::readTrie(const Reader &reader)
     return t;
 }
 
-void Huffman::_writeTrie(const std::unique_ptr<Trie::Node> &ptr, const Writer &writer){
+void Huffman::writeTrie(const std::unique_ptr<Trie::Node> &ptr, const Writer &writer)
+{
     if (ptr->isLeaf())
     {
         writer.writeBit(true);
@@ -52,17 +53,19 @@ void Huffman::_writeTrie(const std::unique_ptr<Trie::Node> &ptr, const Writer &w
 
     writer.writeBit(false);
 
-    _writeTrie(ptr->left, writer);
-    _writeTrie(ptr->right, writer);
+    writeTrie(ptr->left, writer);
+    writeTrie(ptr->right, writer);
 }
 
-void Huffman::saveToFile(const Data & data, const std::string& outfile){
+void Huffman::saveToFile(const Data &data, const std::string &outfile)
+{
     Writer writer(outfile);
-    _writeTrie(data.t.root, writer);
+    writeTrie(data.t.root, writer);
 
-    const std::vector<bool>& v = data.data;
+    const std::vector<bool> &v = data.data;
     uint8_t modulus = (writer.getCount() + v.size()) % 8;
-    if(modulus != 0){
+    if (modulus != 0)
+    {
         modulus = 8 - modulus;
     }
     writer.write(modulus);
@@ -73,7 +76,8 @@ void Huffman::saveToFile(const Data & data, const std::string& outfile){
     }
 }
 
-Data Huffman::loadFromFile(const std::string &infile){
+Data Huffman::loadFromFile(const std::string &infile)
+{
     Reader reader(infile);
     Trie t = readTrie(reader);
     uint8_t modulus = reader.readChar();
@@ -82,11 +86,13 @@ Data Huffman::loadFromFile(const std::string &infile){
     v.reserve(VEC_SIZE);
 
     bool b = reader.readBit();
-    while(!reader.isEOF()){
+    while (!reader.isEOF())
+    {
         v.push_back(b);
         b = reader.readBit();
     }
-    for(uint8_t i = 0; i < modulus; ++i){
+    for (uint8_t i = 0; i < modulus; ++i)
+    {
         v.pop_back();
     }
 
@@ -121,7 +127,7 @@ void Huffman::compress(const std::string &infile, const std::string &outfile)
     uint8_t c = reader.readChar();
     while (!reader.isEOF())
     {
-        const std::vector<bool>& bits = table.lookup(c);
+        const std::vector<bool> &bits = table.lookup(c);
         std::copy(bits.cbegin(), bits.cend(), std::back_inserter(data.data));
         c = reader.readChar();
     }
