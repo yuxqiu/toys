@@ -12,6 +12,7 @@ To run any of the projects,
 # Table of Contents
 
 1. `huffman`: a C++ implementation of Huffman Encoding
+2. `finite-state-machine`: a C++ implementation of some Finite State Machines
 
 # License
 
