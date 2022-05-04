@@ -6,6 +6,8 @@ CFLAGS = -Wall -Wextra -Wreturn-type -Wunreachable-code -Wunused-parameter -Wno-
 SRCDIR = src
 TESTDIR = test
 EXT = cpp
+
+# dependency
 DEPENDENCY =
 INC = -I include $(DEPENDENCY)
 
@@ -46,12 +48,11 @@ endef
 HEADER_DEPEND := $(patsubst %.o,%.d,$(OBJECTS))
 -include $(HEADER_DEPEND)
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.$(EXT) Makefile
+$(BUILDDIR)/%.o: $(SRCDIR)/%.$(EXT) makefile
 	$(COMPILE_COMMAND)
 
-$(BUILDDIR)/%.o: $(TESTDIR)/%.$(EXT) Makefile
+$(BUILDDIR)/%.o: $(TESTDIR)/%.$(EXT) makefile
 	$(COMPILE_COMMAND)
-
 
 
 link: $(OBJECTS)
@@ -70,4 +71,17 @@ clean:
 	@echo "===> Cleaning"
 	@$(RM) -r $(BASE_BUILDDIR) $(BASE_TARGETDIR)
 
-.PHONY: clean
+
+run:
+	@$(foreach file, $(wildcard $(TARGETDIR)/*), ./$(file);)
+
+
+valgrind:
+	@$(foreach file, $(wildcard $(TARGETDIR)/*), valgrind ./$(file);)
+
+
+leaks:
+	@$(foreach file, $(wildcard $(TARGETDIR)/*),  leaks -atExit -- ./$(file);)
+
+
+.PHONY: clean run valgrind leaks
