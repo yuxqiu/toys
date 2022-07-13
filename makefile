@@ -1,12 +1,12 @@
-all: finite-state-machine-build
+all: finite-state-machine-build my-matrix-build
 
-run: finite-state-machine-run
+run: finite-state-machine-run my-matrix-run
 
-valgrind: finite-state-machine-valgrind
+valgrind: finite-state-machine-valgrind my-matrix-valgrind
 
-leaks: finite-state-machine-leaks
+leaks: finite-state-machine-leaks my-matrix-leaks
 
-clean: finite-state-machine-clean
+clean: finite-state-machine-clean my-matrix-clean
 
 
 # =============================================== FSM
@@ -25,6 +25,23 @@ finite-state-machine-leaks:
 finite-state-machine-clean:
 	make clean --directory finite-state-machine
 # =============================================== FSM
+
+# =============================================== MyMatrix
+my-matrix-build:
+	make --directory MyMatrix
+
+my-matrix-run:
+	make run --directory MyMatrix
+
+my-matrix-valgrind:
+	make valgrind --directory MyMatrix
+
+my-matrix-leaks:
+	make leaks --directory MyMatrix
+
+my-matrix-clean:
+	make clean --directory MyMatrix
+# =============================================== MyMatrix
 
 
 .PHONY: clean run valgrind leaks
