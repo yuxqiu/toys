@@ -14,4 +14,11 @@ int main(void){
 
     // Too many args
     fmt::format("Too many args: {}\n", 1, 2, 3, 4);
+
+    // Escaped with vars
+    fmt::format("An escaped {{}} with an arg {}\n", "hello world!");
+    fmt::format("An arg {} with an escaped {{}}\n", true);
+
+    // Others
+    fmt::format("====={}{}{}=====\n");
 }
