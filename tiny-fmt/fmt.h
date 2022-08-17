@@ -43,7 +43,8 @@ private:
   }
 
   static bool escaped(const std::string_view &s, size_t i, size_t j) {
-    return s[i + 1] == LEFT_SEPERATOR && s[j + 1] == RIGHT_SEPERATOR;
+    return j + 1 < s.length() && s[i + 1] == LEFT_SEPERATOR &&
+           s[j + 1] == RIGHT_SEPERATOR;
   }
 
 public:
@@ -55,7 +56,7 @@ public:
 
       if (escaped(s, i, j)) {
         _internal_print(os, s.substr(i + 1, j - i - 1));
-        return format(s.substr(j + 1), arg, args...);
+        return format(os, s.substr(j + 1), arg, args...);
       }
 
       _internal_print(os, arg);
