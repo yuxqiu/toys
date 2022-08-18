@@ -17,32 +17,24 @@ private:
     os << s;
   }
 
-  static size_t find_left_bracket(const std::string_view &s, size_t idx = 0) {
-    for (size_t i = idx, size = s.length(); i < size; ++i) {
-      if (s[i] == LEFT_SEPERATOR) {
-        return i;
-      }
-    }
-    return s.length();
+  static constexpr size_t find_left_bracket(const std::string_view &s,
+                                            size_t idx = 0) {
+    return s.find(LEFT_SEPERATOR, idx);
   }
 
-  static size_t find_right_bracket(const std::string_view &s, size_t idx = 0) {
-    for (size_t i = idx, size = s.length(); i < size; ++i) {
-      if (s[i] == RIGHT_SEPERATOR) {
-        return i;
-      }
-    }
-    return s.length();
+  static constexpr size_t find_right_bracket(const std::string_view &s,
+                                             size_t idx = 0) {
+    return s.find(RIGHT_SEPERATOR, idx);
   }
 
-  static std::pair<size_t, size_t> find_separator(const std::string_view &s,
-                                                  size_t idx = 0) {
+  static constexpr std::pair<size_t, size_t>
+  find_separator(const std::string_view &s, size_t idx = 0) {
     size_t i = find_left_bracket(s, idx);
     size_t j = find_right_bracket(s, i + 1);
     return std::make_pair(i, j);
   }
 
-  static bool escaped(const std::string_view &s, size_t i, size_t j) {
+  static constexpr bool escaped(const std::string_view &s, size_t i, size_t j) {
     return j + 1 < s.length() && s[i + 1] == LEFT_SEPERATOR &&
            s[j + 1] == RIGHT_SEPERATOR;
   }
@@ -51,7 +43,8 @@ public:
   template <typename T, typename... Args>
   static void format(std::ostream &os, const std::string_view &s, const T &arg,
                      const Args &...args) {
-    if (auto [i, j] = find_separator(s); i != s.length() && j != s.length()) {
+    if (auto [i, j] = find_separator(s);
+        i != std::string_view::npos && j != std::string_view::npos) {
       _internal_print(os, s.substr(0, i));
 
       if (escaped(s, i, j)) {
@@ -76,7 +69,7 @@ public:
     size_t prev = 0;
     auto [i, j] = find_separator(s);
 
-    while (i != s.length() && j != s.length()) {
+    while (i != std::string_view::npos && j != std::string_view::npos) {
       _internal_print(os, s.substr(prev, i - prev));
 
       if (escaped(s, i, j)) {
