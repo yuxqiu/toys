@@ -11,21 +11,25 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v3
     - name: make
-      run: make
-    - name: make run
+      run: |
+        make
+        make debug=1
+    - name: run release
       run: make run
-    - name: run on Linux
+    - name: run sanitizer
+      run: make sanitizer debug=1
+    - name: run valgrind (Linux)
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
         sudo apt install -y valgrind
         make valgrind
-    - name: run on Mac
+    - name: run leaks (Mac)
       if: matrix.os == 'macos-latest'
       run: |
         make leaks
