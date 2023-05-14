@@ -87,7 +87,7 @@ fn eval(source_code: String) {
             }
             b'[' => {
                 if *memory.index_mut(data) == 0 {
-                    // can improve this by pre-calculating (one byte at a time or SIMD) /cacheing the corresponding ]
+                    // can improve this by pre-calculating (one byte at a time or SIMD) or cacheing the corresponding ]
                     let mut counter: usize = 1;
                     while counter != 0 {
                         pc += 1;
@@ -105,7 +105,7 @@ fn eval(source_code: String) {
             }
             b']' => {
                 if *memory.index_mut(data) != 0 {
-                    // can improve this by pre-calculating (one byte at a time or SIMD) /cacheing the corresponding ]
+                    // can improve this by pre-calculating (one byte at a time or SIMD) or cacheing the corresponding [
                     let mut counter: usize = 1;
                     while counter != 0 {
                         if pc == 0 {
