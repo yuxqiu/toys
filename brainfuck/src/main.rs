@@ -79,7 +79,7 @@ fn eval(source_code: String) {
                 if let Err(io_error) = std::io::stdin().read_exact(&mut byte) {
                     // permit EOF when waiting for input
                     if io_error.kind() != std::io::ErrorKind::UnexpectedEof {
-                        panic!("failed to read 1 byte from stdin");
+                        panic!("failed to read 1 byte from stdin. {}", io_error);
                     }
                 } else {
                     *memory.index_mut(data) = byte[0];
