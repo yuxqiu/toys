@@ -53,10 +53,7 @@ fn eval(source_code: String) {
             b'+' => *memory.index_mut(data) = memory.index_mut(data).wrapping_add(1),
             b'-' => *memory.index_mut(data) = memory.index_mut(data).wrapping_sub(1),
             b'.' => {
-                print!(
-                    "{}",
-                    char::from_u32(*memory.index_mut(data) as u32).unwrap()
-                );
+                print!("{}", (*memory.index_mut(data) as char));
 
                 // In REPL mode, if the flushed contents do not contain a newline character
                 // they will be hidden by rustyline.
