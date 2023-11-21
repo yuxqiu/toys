@@ -1,6 +1,6 @@
 # Toys
 
-This repository contains some C++ projects I made in my spare time. They are very rudimentary and crude and should only be used as toys.
+This repository contains some projects I made in my spare time. They are very rudimentary, have not been rigorously tested, and should only be used as toys.
 
 # Table of Contents
 
@@ -12,6 +12,7 @@ This repository contains some C++ projects I made in my spare time. They are ver
 6. `cpp-as-rust`: a set of header files that aims to provide Rust-like programming experience in C++
 7. `threadpool`: a simple implementation of ThreadPool in C++17 with benchmark.
 8. `brainfuck`: a tiny brain fuck interpreter written in Rust.
+9. `nand2tetris`: a rust implementation of nand2tetris assembler, virtual machine, and compiler
 
 # License
 

@@ -1,0 +1,13 @@
+[workspace]
+
+members = [
+    "jcc",
+    "jc",
+    "jt",
+]
+
+resolver = "2"
+
+[workspace.dependencies]
+anyhow = "1.0.75"
+compact_str = "0.7.1"
