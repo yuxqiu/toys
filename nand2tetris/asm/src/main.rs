@@ -75,6 +75,7 @@ fn main() -> Result<()> {
     let mut writer = BufWriter::new(
         fs::File::options()
             .write(true)
+            .truncate(true)
             .create(true)
             .open(&out_filename)
             .with_context(|| format!("Failed to open {}", &out_filename))?,
