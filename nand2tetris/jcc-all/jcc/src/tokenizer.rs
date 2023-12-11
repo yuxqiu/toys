@@ -150,10 +150,10 @@ fn process_multi_line_comment(chars: &[char]) -> Result<(usize, usize)> {
         })
         .count();
 
-    if let Some(c) = chars.get(2 + count) {
-        if *c != '*' {
-            bail!("multi-line comment does not end with `*/`");
-        }
+    if !chars.get(2 + count).is_some_and(|c| *c == '*')
+        || !chars.get(3 + count).is_some_and(|c| *c == '/')
+    {
+        bail!("unterminated comment");
     }
 
     Ok((4 + count, line))
@@ -166,10 +166,8 @@ fn process_strings(chars: &[char]) -> Result<(usize, CompactString)> {
         .take_while(|c| **c != '\n' && **c != '"')
         .count();
 
-    if let Some(c) = chars.get(count + 1) {
-        if *c != '"' {
-            bail!("string does not end with `\"`");
-        }
+    if !chars.get(count + 1).is_some_and(|c| *c == '"') {
+        bail!("string does not end with `\"`");
     }
 
     Ok((2 + count, chars[1..count + 1].iter().collect()))
