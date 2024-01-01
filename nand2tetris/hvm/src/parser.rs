@@ -49,15 +49,15 @@ pub enum Kind {
 impl std::fmt::Display for Kind {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Kind::Push(segment, index) => write!(f, "push {} {}", segment, index),
-            Kind::Pop(segment, index) => write!(f, "pop {} {}", segment, index),
+            Kind::Push(segment, index) => write!(f, "push {segment} {index}"),
+            Kind::Pop(segment, index) => write!(f, "pop {segment} {index}"),
 
-            Kind::Label(label) => write!(f, "label {}", label),
-            Kind::Goto(label) => write!(f, "goto {}", label),
-            Kind::IfGoto(label) => write!(f, "if-goto {}", label),
+            Kind::Label(label) => write!(f, "label {label}"),
+            Kind::Goto(label) => write!(f, "goto {label}"),
+            Kind::IfGoto(label) => write!(f, "if-goto {label}"),
 
-            Kind::Function(func, nlcls) => write!(f, "function {} {}", func, nlcls),
-            Kind::Call(func, nargs) => write!(f, "call {} {}", func, nargs),
+            Kind::Function(func, nlcls) => write!(f, "function {func} {nlcls}"),
+            Kind::Call(func, nargs) => write!(f, "call {func} {nargs}"),
             Kind::Return => write!(f, "return"),
 
             kind => <&Kind as Into<&'static str>>::into(kind).fmt(f),
@@ -89,7 +89,7 @@ pub fn parse(line: &str) -> Option<Kind> {
                     // always assume this is a valid index after parsing
                     // let assembler handle this error
                     let index = right.parse::<u16>().unwrap_or_else(|_| {
-                        panic!("Invalid index for push/pop instruction. Got {}", line)
+                        panic!("Invalid index for push/pop instruction. Got {line}")
                     });
 
                     match op {
@@ -101,32 +101,28 @@ pub fn parse(line: &str) -> Option<Kind> {
                 "function" => {
                     let nlcls = right.parse::<u16>().unwrap_or_else(|_| {
                         panic!(
-                            "Invalid number of local variables for function instruction. Got {}",
-                            line
+                            "Invalid number of local variables for function instruction. Got {line}"
                         )
                     });
                     Kind::Function(left.into(), nlcls)
                 }
                 "call" => {
                     let nargs = right.parse::<u16>().unwrap_or_else(|_| {
-                        panic!(
-                            "Invalid number of arguments for call instruction. Got {}",
-                            line
-                        )
+                        panic!("Invalid number of arguments for call instruction. Got {line}")
                     });
                     Kind::Call(left.into(), nargs)
                 }
                 _ => unreachable!(),
             });
-        } else {
-            // 1 whitespace
-            return Some(match op {
-                "label" => Kind::Label(other.into()),
-                "goto" => Kind::Goto(other.into()),
-                "if-goto" => Kind::IfGoto(other.into()),
-                _ => unreachable!(),
-            });
         }
+
+        // 1 whitespace
+        return Some(match op {
+            "label" => Kind::Label(other.into()),
+            "goto" => Kind::Goto(other.into()),
+            "if-goto" => Kind::IfGoto(other.into()),
+            _ => unreachable!(),
+        });
     }
 
     // arithmetic, return

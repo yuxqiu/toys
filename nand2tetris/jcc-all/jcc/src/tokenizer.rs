@@ -108,6 +108,7 @@ impl Tokens {
         token_with_line
     }
 
+    #[must_use]
     pub fn peek(&self, ith: usize) -> Option<&Line<Token>> {
         self.tokens.get(self.idx + ith)
     }
@@ -170,7 +171,7 @@ fn process_strings(chars: &[char]) -> Result<(usize, CompactString)> {
         bail!("string does not end with `\"`");
     }
 
-    Ok((2 + count, chars[1..count + 1].iter().collect()))
+    Ok((2 + count, chars[1..=count].iter().collect()))
 }
 
 // (adv, identifier/keyword)
@@ -182,7 +183,7 @@ fn process_identifier(chars: &[char]) -> (usize, CompactString) {
     (count, chars[..count].iter().collect())
 }
 
-pub fn tokenize(chars: Vec<char>) -> Result<Tokens> {
+pub fn tokenize(chars: &[char]) -> Result<Tokens> {
     let mut tokens: Vec<Line<Token>> = Vec::new();
 
     // I didn't track column num because I didn't want to deal with grapheme

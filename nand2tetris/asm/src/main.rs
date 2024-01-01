@@ -20,8 +20,12 @@ fn main() -> Result<()> {
             arguments.get(0).unwrap_or(&"asm".to_string())
         );
     }
-    if !arguments[1].ends_with(".asm") {
-        bail!("Input file must be .asm file. Got {} instead", arguments[1]);
+
+    if !std::path::Path::new(&arguments[1])
+        .extension()
+        .is_some_and(|ext| ext.eq_ignore_ascii_case("asm"))
+    {
+        bail!("Input file must be .asm file.");
     }
 
     let contents = fs::read_to_string(&arguments[1])
@@ -44,9 +48,8 @@ fn main() -> Result<()> {
                         "Failed to build up the symbol table because of the duplicate symbol {}",
                         label
                     );
-                } else {
-                    symbols_table.insert_label(label.to_string(), line_num);
                 }
+                symbols_table.insert_label(label.to_string(), line_num);
             }
         }
     }
@@ -81,9 +84,9 @@ fn main() -> Result<()> {
             .with_context(|| format!("Failed to open {}", &out_filename))?,
     );
 
-    binary_code.into_iter().for_each(|b| {
-        writeln!(&mut writer, "{:016b}", b).unwrap();
-    });
+    for b in binary_code {
+        writeln!(&mut writer, "{b:016b}").unwrap();
+    }
 
     Ok(())
 }

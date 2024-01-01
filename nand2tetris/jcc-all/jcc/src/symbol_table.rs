@@ -60,7 +60,7 @@ impl LocalSymbolTable {
         this: Option<ClassName>,
     ) -> LocalSymbolTable {
         let mut symbol_table = HashMap::new();
-        symbol_table.reserve(args.len() + vars.len() + this.is_some() as usize);
+        symbol_table.reserve(args.len() + vars.len() + usize::from(this.is_some()));
 
         let mut args_count = 0;
         let mut vars_count = 0;
@@ -70,21 +70,21 @@ impl LocalSymbolTable {
             args_count = 1;
         }
 
-        args.iter().for_each(|decl| {
+        for decl in args {
             symbol_table.insert(
                 decl.var_name().clone(),
                 (VarKind::Arg(decl.var_type().clone()), args_count),
             );
             args_count += 1;
-        });
+        }
 
-        vars.iter().for_each(|decl| {
+        for decl in vars {
             symbol_table.insert(
                 decl.var_name().clone(),
                 (VarKind::Var(decl.var_type().clone()), vars_count),
             );
             vars_count += 1;
-        });
+        }
 
         LocalSymbolTable(symbol_table)
     }

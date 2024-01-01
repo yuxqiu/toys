@@ -30,7 +30,7 @@ where
     while let Some(token) = tokens.pop().map(|t| &t.inner) {
         match token {
             jcc::tokenizer::Token::Keywords(keyword) => {
-                writeln!(writer, "<keyword> {} </keyword>", keyword).unwrap();
+                writeln!(writer, "<keyword> {keyword} </keyword>").unwrap();
             }
             jcc::tokenizer::Token::Symbols(symbol) => {
                 writeln!(
@@ -41,7 +41,7 @@ where
                 .unwrap();
             }
             jcc::tokenizer::Token::Integer(integer) => {
-                writeln!(writer, "<integerConstant> {} </integerConstant>", integer).unwrap();
+                writeln!(writer, "<integerConstant> {integer} </integerConstant>").unwrap();
             }
             jcc::tokenizer::Token::String(string) => {
                 writeln!(
@@ -52,7 +52,7 @@ where
                 .unwrap();
             }
             jcc::tokenizer::Token::Identifier(identifier) => {
-                writeln!(writer, "<identifier> {} </identifier>", identifier).unwrap();
+                writeln!(writer, "<identifier> {identifier} </identifier>").unwrap();
             }
         }
     }

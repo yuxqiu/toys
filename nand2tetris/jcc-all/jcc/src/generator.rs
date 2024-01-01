@@ -46,7 +46,7 @@ impl<'a> FunctionContext<'a> {
     }
 }
 
-pub fn generate(tree: ParseTree) -> Result<Vec<CompactString>> {
+pub fn generate(tree: &ParseTree) -> Result<Vec<CompactString>> {
     let class_table = ClassSymbolTable::new(tree.var_declarations());
 
     let mut code = vec![];
@@ -191,7 +191,7 @@ fn generate_statements(
                 LetStatement::Let(var_name, expr) => {
                     let var = context
                         .get_symbol(var_name)
-                        .with_context(|| format!("Failed to find variable {}", var_name))?;
+                        .with_context(|| format!("Failed to find variable {var_name}"))?;
 
                     let mut expr_code = generate_expression(context, expr)?;
                     expr_code.reserve_exact(1);
@@ -206,7 +206,7 @@ fn generate_statements(
                 LetStatement::LetArray(var_name, expr_lhs, expr_rhs) => {
                     let var = context
                         .get_symbol(var_name)
-                        .with_context(|| format!("Failed to find variable {}", var_name))?;
+                        .with_context(|| format!("Failed to find variable {var_name}"))?;
 
                     let mut code = vec![format_compact!(
                         "push {} {}",
@@ -351,7 +351,7 @@ fn generate_term(context: &FunctionContext, term: &Term) -> Result<Vec<CompactSt
         Term::Array(var_name, expr) => {
             let var = context
                 .get_symbol(var_name)
-                .with_context(|| format!("Failed to find variable {}", var_name))?;
+                .with_context(|| format!("Failed to find variable {var_name}"))?;
 
             let mut array_code = vec![format_compact!(
                 "push {} {}",
@@ -405,7 +405,7 @@ fn generate_term(context: &FunctionContext, term: &Term) -> Result<Vec<CompactSt
         Term::Variable(var_name) => {
             let var = context
                 .get_symbol(var_name)
-                .with_context(|| format!("Failed to find variable {}", var_name))?;
+                .with_context(|| format!("Failed to find variable {var_name}"))?;
             vec![format_compact!(
                 "push {} {}",
                 get_segment_name(&var.0),

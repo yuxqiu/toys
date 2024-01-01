@@ -202,7 +202,7 @@ M=D
                     format_compact!("@{}", 5 + index),
                     "M=D".into(),
                 ],
-                _ => unreachable!(),
+                segment::Segment::Constant => unreachable!(),
             },
 
             Kind::Label(label) => {

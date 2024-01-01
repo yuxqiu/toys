@@ -12,9 +12,11 @@ fn main() -> Result<()> {
     let arguments: Vec<CompactString> = env::args_os()
         .map(|arg| arg.to_str().unwrap().into())
         .collect();
-    if arguments.len() != 2 {
-        panic!("Usage: {} file", arguments.get(0).unwrap_or(&"jc".into()));
-    }
+    assert!(
+        arguments.len() == 2,
+        "Usage: {} file",
+        arguments.get(0).unwrap_or(&"jc".into())
+    );
 
     let is_single_file = arguments[1].ends_with(".jack");
     let path = Path::new(&arguments[1]);
@@ -69,7 +71,7 @@ fn main() -> Result<()> {
 }
 
 fn codegen_single_file(path: &Path) -> Result<()> {
-    let tokens = tokenize(fs::read_to_string(path)?.chars().collect())
+    let tokens = tokenize(&fs::read_to_string(path)?.chars().collect::<Vec<_>>())
         .with_context(|| format!("Failed to tokenize {}", &path.to_str().unwrap()))?;
     let tree =
         parse(tokens).with_context(|| format!("Failed to tokenize {}", &path.to_str().unwrap()))?;
@@ -88,7 +90,7 @@ fn codegen_single_file(path: &Path) -> Result<()> {
             .create(true)
             .open(&path)?,
     );
-    write!(&mut writer, "{}", generate(tree)?.join("\n")).with_context(|| {
+    write!(&mut writer, "{}", generate(&tree)?.join("\n")).with_context(|| {
         format!(
             "Failed to write generated code to {}",
             path.to_str().unwrap()

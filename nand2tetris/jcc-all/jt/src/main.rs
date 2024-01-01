@@ -11,9 +11,11 @@ fn main() -> Result<()> {
     let arguments: Vec<CompactString> = env::args_os()
         .map(|arg| arg.to_str().unwrap().into())
         .collect();
-    if arguments.len() != 2 {
-        panic!("Usage: {} file", arguments.get(0).unwrap_or(&"jc".into()));
-    }
+    assert!(
+        arguments.len() == 2,
+        "Usage: {} file",
+        arguments.get(0).unwrap_or(&"jc".into())
+    );
 
     let is_single_file = arguments[1].ends_with(".jack");
     let path = Path::new(&arguments[1]);
@@ -68,7 +70,7 @@ fn main() -> Result<()> {
 }
 
 fn xml_single_file(path: &Path) -> Result<()> {
-    let mut tokens = tokenize(fs::read_to_string(path)?.chars().collect())
+    let mut tokens = tokenize(&fs::read_to_string(path)?.chars().collect::<Vec<_>>())
         .with_context(|| format!("Failed to tokenize {}", &path.to_str().unwrap()))?;
     let path = {
         let mut path = path.to_path_buf();
