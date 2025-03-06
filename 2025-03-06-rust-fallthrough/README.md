@@ -1,4 +1,4 @@
-# Benchmark for Rust jump table
+# Benchmark for Rust fallthrough
 
 This project has an accompanying blog at [https://yuxqiu.github.io/blog/2025/til-9/](https://yuxqiu.github.io/blog/2025/til-9/).
 
