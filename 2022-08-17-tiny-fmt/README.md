@@ -5,7 +5,3 @@ A simple implementation of C++ `format`. This header file doesn't support any ki
 ## Notice
 
 I am working on writing a `constexpr` version of tiny-fmt now.
-
-## License
-
-[MIT License](./LICENSE)

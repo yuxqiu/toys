@@ -1,4 +1,4 @@
-## BrainFuck Interpreter
+# BrainFuck Interpreter
 
 A tiny brain fuck interpreter written in Rust.
 

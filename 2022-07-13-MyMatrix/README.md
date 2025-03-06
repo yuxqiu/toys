@@ -1,15 +1,8 @@
 # MyMatrix
 
-<p align="center">
-  <a href="https://github.com/qyxtim/MyMatrix/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/qyxtim/MyMatrix"></a>
-  <a href="https://github.com/qyxtim/MyMatrix"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/qyxtim/MyMatrix"></a>
-  <a href="https://github.com/qyxtim/MyMatrix/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/qyxtim/MyMatrix"></a>
-  <a href="https://github.com/qyxtim/MyMatrix/blob/main/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/qyxtim/MyMatrix"></a>
-</p>
-
 MyMatrix is a C++ implementation of a simple matrix library that supports basic Matrix operations, including Matrix inverse, transpose, and multiplication.
 
-# Usage
+## Usage
 
 You can create a matrix via the following methods:
 
@@ -86,35 +79,29 @@ Matrix c = a <= 1;
 // >=, >, < are also supported.
 ```
 
-# Test
+## Test
 
 The library has been tested by using [Catch2](https://github.com/catchorg/Catch2). Its basic functionality currently passes all the tests listed in `./test/test.cpp`. However, these tests are not guaranteed to be comprehensive. Therefore, if there are any issues with the library, feel free to fix them by pushing a request.
 
-# Contribute
+## Contribute
 
 We welcome you to contribute to this project in the following ways:
 1. Edit the existing algorithm to make it faster.
 2. Add additional features.
 3. Add more test cases.
 
-# New Features
+## New Features
 
 - [x] Implementation of pseudo-inverse
 - [x] Implementation of faster matrix multiplication algorithm
 - [ ] Faster Implementation: See [BLAS-level CPU Performance in 100 Lines of C](https://cs.stanford.edu/people/shadjis/blas.html)
 
-# License
-
-[MIT License](./LICENSE)
-
-# Notes
+## Notes
 
 1. The Moore-Penrose Pseudoinverse are implemented based on the fact that
 
-<p align="center">
-  <img src=".assets/f1.png">
-</p>
+    $$ A^+ = \lim_{\delta \to 0} (A^T A + \delta^2 I) A^T $$
 
-In the library, the delta value is chosen to be 0.0001. This value can be reduced to obtain more accurate results, but the issue of precision needs to be looked at carefully.
+    In the library, the delta value is chosen to be 0.0001. This value can be reduced to obtain more accurate results, but the issue of precision needs to be looked at carefully.
 
 2. Although Strassen's algorithm is asymptotically faster than the traditional matrix multiplication, it's not the default implementation of the matrix multiplication in MyMatrix library. It's also not suggested to use this algorithm in real-life applications. For more detailed reasons, you can refer to [Strassen algorithm: Asymptotic complexity](https://en.wikipedia.org/wiki/Strassen_algorithm#Asymptotic_complexity).

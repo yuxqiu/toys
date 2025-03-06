@@ -1,4 +1,4 @@
-## nand2tetris
+# nand2tetris
 
 - `asm` contains the implementation of the nand2tetris assembler.
 - `hvm` contains the implementation of the nand2tetris virtual machine.

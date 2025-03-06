@@ -3,9 +3,8 @@
 finite-state machine is a C++ implementation of some Finite-state Machines, including DFA, NFA that support the standard operations.
 
 ## Installation and Compilation
-To use this project, first clone the repo on your device using the command below:
 
-`git clone https://github.com/qyxtim/finite-state-machine.git`
+To use this project, first clone the repo on your device.
 
 Then, add the following line to your source file:
 
@@ -57,11 +56,12 @@ nfa.accept("str");
 
 ## Test
 
-The library has been tested by using `Catch2`(C++ part).
+The library has been tested by using `Catch2` (C++ part).
 
 Before running C++ test, make sure you put `catch.hpp` in include folder, and run `make` to generate the test executable.
 
 ## New Features
+
 - [ ] Design Improvements
 - [ ] Support for Non-Deterministic PDA
 - [ ] Support for Turing Machine

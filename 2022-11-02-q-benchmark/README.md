@@ -4,14 +4,14 @@ q-benchmark is a command-line benchmark tool inspired by an awesome command-line
 
 This tool uses about `250` lines of code to build a simple replica of hyperfine.
 
-# Features
+## Features
 
 - Support for any shell commands
 - Support for defining min/max number of test runs
 - Report mean/std/range for tests
 - warmup before running the benchmark
 
-# Usage
+## Usage
 
 q-benchmark only supports macOS/Linux now.
 
@@ -24,15 +24,16 @@ To use q-benchmark:
       - `-l` lower: lower bound of the number of test runs. The default number is 100.
       - `-h` upper: upper bound of the number of test runs. The default number is 1000.
 
-# Example
+## Example
 
 To benchmark the `sleep` function, you can run:
 
-```
+```sh
 ./bin/release/qbench -w 3 -l 1 -h 5 "sleep 0.3" "sleep 0.3"
 ```
 
 Then q-benchmark will output the statistical results:
+
 ```
 Benchmark: sleep (3 runs)
   Time: 306.64 ms(mean) ± 1.76368 ms(std)
@@ -43,10 +44,6 @@ Benchmark: sleep (5 runs)
   Range: 306.783 ms(min) … 309.333 ms(max)
 ```
 
-# License
-
-[MIT License](./LICENSE)
-
-# Known Issues
+## Known Issues
 
 The parser simply uses whitespace to separate the command line arguments. Therefore, it may fail under some circumstances.
