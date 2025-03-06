@@ -1,6 +1,6 @@
 # Toys
 
-This repository contains some projects I made in my spare time. They are very rudimentary, have not been rigorously tested, and should only be used as toys.
+This repository contains some projects I made in my spare time. They are very rudimentary, have not been rigorously tested, and should only be treated as toys.
 
 # Table of Contents
 
